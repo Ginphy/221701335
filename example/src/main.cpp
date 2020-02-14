@@ -281,9 +281,10 @@ int main(int argc, char** argv) {
 	string file;
 	string date("2020-01-29");
 
-    argc = 3;
-    argv[1] = "-type";
-    argv[2] = "ip";
+    //argc = 4;
+   // argv[1] = "-province";
+   // argv[2] = "福建";
+   // argv[3] = "全国";
     
     
 	cout<<"argc:"<<argc<<endl;
@@ -307,31 +308,32 @@ int main(int argc, char** argv) {
 		}
 		else if(option == "-type"){
 			outTypeSet = 1;
-			
-			////////////////
-			//cout<<endl<<endl<<argv[i+1]<<endl<<endl;
-			//cout<<i<<" argc:"<<argc;
-			
-			val = argv[i+1];
-				
-			while((val == "ip"||val == "sp"||val == "cure"||val == "dead") && i < argc) {
+			while((i+1) < argc) {
+				val = argv[i+1];
+				if((val == "ip"||val == "sp"||val == "cure"||val == "dead")){
+					outType.push_back(val);
+					i++;
+				}
+				else
+					break;
 				//cout<<" argv[i+1]:"<<argv[1+i]<<endl;
 				//option = val;
-				i++;
-				outType.push_back(val);
-				val = argv[i+1];
 			}
-			cout<<"aaaaaaaaaaa";
 		}
 		else if(option == "-province"){
 			outProvincesSet = 1;
 			map<string,int>::iterator it;
-			it = provincesOut.find(argv[i+1]);
-			while(it != provincesOut.end()){
-				option = argv[++i];
-				provincesOut.at(option) = 1;
-				it = provincesOut.find(argv[i+1]);
+			while((i+1) < argc){
+				val = argv[i+1];
+				it = provincesOut.find(val);
+				if(it != provincesOut.end()){
+					provincesOut.at(val) = 1;
+					i++;
+				}
+				else
+					break;
 			}
+			
 		}
 		else{
 			cout<<endl<<endl<<option<<endl<<endl;
@@ -339,8 +341,6 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 	}
-	
-	//cout<<"aaaaaaaaaaa";
 	
 	if(filePath.length() == 0){
 		cout<<"-log参数未指定"<<endl;
@@ -511,7 +511,6 @@ int main(int argc, char** argv) {
 		}
 	}
 	else{
-		cout<<"111111111111111111";
 		if(outProvincesSet != 0 && outTypeSet == 0){
 			for(int i=0; i<32; i++){
 				if(provincesOut.at(provincesList[i]) == 1)
@@ -519,7 +518,6 @@ int main(int argc, char** argv) {
 			}
 		}
 		else if(outProvincesSet == 0 && outTypeSet != 0){
-			cout<<"1222222222222222222";
 			for(int i=0; i<32; i++){
 				cout<<provincesList[i];
 				for (vector<string>::iterator iter = outType.begin(); iter != outType.end(); iter++){
@@ -539,17 +537,14 @@ int main(int argc, char** argv) {
 						cout<<"-type参数错误"<<endl;
 						return -1; 
 					}
-					cout<<endl;
 				}
-				//
+				cout<<endl;
 			}
 		}
 		else{
-			cout<<"1233333333";
 			for(int i=0; i<32; i++){
 				if(provincesOut.at(provincesList[i]) == 1){
 					cout<<provincesList[i];
-					
 					for (vector<string>::iterator iter = outType.begin(); iter != outType.end(); iter++){
 						if(*iter == "ip"){
 							cout<<"\t感染患者"<<provincesDef.at(provincesList[i]);
@@ -567,9 +562,8 @@ int main(int argc, char** argv) {
 							cout<<"-type参数错误"<<endl;
 							return -1; 
 						}
-						cout<<endl;
 					}
-				
+					cout<<endl;
 				}
 			}
 			
@@ -580,6 +574,7 @@ int main(int argc, char** argv) {
 	cout<<"__________________________________________________________________"<<endl;
 	
 	/*
+	//测试用：数据按照map结构全输出 
 	cout << "Undef:" <<endl;
 	for (map<string, int>::iterator iter = provincesUndef.begin(); iter != provincesUndef.end(); iter++)
     	cout << iter->first << " ==> " << iter->second << endl;
