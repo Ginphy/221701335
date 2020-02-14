@@ -106,7 +106,42 @@ int main(int argc, char** argv) {
 	//设置输出格式记录结构 
 	int outTypeSet = 0;
 	vector<string> outType;
-	
+	int outProvincesSet = 0;
+	string provincesList[] = {"全国","安徽","北京","重庆","福建","甘肃","广东","广西","贵州","海南","河北","河南","黑龙江","湖北","湖南","吉林","江苏","江西","辽宁","内蒙古","宁夏","青海","山东","山西","陕西","上海","四川","天津","西藏","新疆","云南","浙江"}; 
+	map<string,int> provincesOut;
+	provincesOut["全国"] = 0;
+	provincesOut["安徽"] = 0;
+	provincesOut["北京"] = 0;
+	provincesOut["重庆"] = 0;
+	provincesOut["福建"] = 0;
+	provincesOut["甘肃"] = 0;
+	provincesOut["广东"] = 0;
+	provincesOut["广西"] = 0;
+	provincesOut["贵州"] = 0;
+	provincesOut["海南"] = 0;
+	provincesOut["河北"] = 0;
+	provincesOut["河南"] = 0;
+	provincesOut["黑龙江"] = 0;
+	provincesOut["湖北"] = 0;
+	provincesOut["湖南"] = 0;
+	provincesOut["吉林"] = 0;
+	provincesOut["江苏"] = 0;
+	provincesOut["江西"] = 0;
+	provincesOut["辽宁"] = 0;
+	provincesOut["内蒙古"] = 0;
+	provincesOut["宁夏"] = 0;
+	provincesOut["青海"] = 0;
+	provincesOut["山东"] = 0;
+	provincesOut["山西"] = 0;
+	provincesOut["陕西"] = 0; 
+	provincesOut["上海"] = 0;
+	provincesOut["四川"] = 0;
+	provincesOut["天津"] = 0;
+	provincesOut["西藏"] = 0;
+	provincesOut["新疆"] = 0;
+	provincesOut["云南"] = 0;
+	provincesOut["浙江"] = 0;
+
 	//设置各省人数统计map结构 
 	map<string,int> provincesUndef;
 	map<string,int> provincesDef;
@@ -270,7 +305,14 @@ int main(int argc, char** argv) {
 			}
 		}
 		else if(option == "-province"){
-			;
+			outProvincesSet = 1;
+			map<string,int>::iterator it;
+			it = provincesOut.find(argv[i+1]);
+			while(it != provincesOut.end()){
+				option = argv[++i];
+				provincesOut.at(option) = 1;
+				it = provincesOut.find(argv[i+1]);
+			}
 		}
 		else{
 			cout<<"输出参数错误"<<endl;
