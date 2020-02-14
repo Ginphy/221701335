@@ -1,7 +1,8 @@
 /**
+ * InfectStatistic
  * TODO
  *
- * @author 221701335 Ô¬ï¿½ï¿½ï¿½ï¿½ 
+ * @author 221701335 Ô¬½õ»Ô 
  * @version 1.0 
  * @since 2020.2.10 
  */

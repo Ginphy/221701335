@@ -86,13 +86,14 @@ void getAllFiles(string path, vector<string>& files,string format)
 			{
 				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)//文件夹名中不含"."和".."
 				{
-					files.push_back(p.assign(path).append("\\").append(fileinfo.name)); //保存文件夹名
-					getAllFiles(p.assign(path).append("\\").append(fileinfo.name), files,format); //递归遍历文件夹
+					files.push_back(p.assign(path).append(fileinfo.name)); //保存文件夹名
+					getAllFiles(p.assign(path).append(fileinfo.name), files,format); //递归遍历文件夹
 				}
 			}
 			else
 			{
-				files.push_back(p.assign(path).append("\\").append(fileinfo.name));//如果不是文件夹，储存文件名
+				files.push_back(p.assign(path).append(fileinfo.name));//如果不是文件夹，储存文件名
+				//files.push_back(p.assign(path).append("\\").append(fileinfo.name));
 			}
 		} while (_findnext(hFile, &fileinfo) == 0);
 		_findclose(hFile);
@@ -240,14 +241,13 @@ int main(int argc, char** argv) {
 	provincesDie["云南"] = 0;
 	provincesDie["浙江"] = 0;
 	string targetProvince; 
-	string filePath("C:\\Users\\Administrator\\Documents\\GitHub\\221701335\\example\\log");
+	string filePath("C:\\Users\\Administrator\\Documents\\GitHub\\221701335\\example\\log\\");
 	string outPath;
 	string file;
 	string date("2020-01-29");
-	vector<string> files;
-	string format = "";	//.txt
-	getAllFiles(filePath, files, format);
-	int size = files.size();
+
+	
+	
 	char temp[256];
 	int numTemp;
 	string option;
@@ -264,7 +264,10 @@ int main(int argc, char** argv) {
 		}
 		else if(option == "-type"){
 			outTypeSet = 1;
-			option = argv[++i];
+			while(argv[i+1] == "ip"||argv[i+1] == "sp"||argv[i+1] == "cure"||argv[i+1] == "dead") {
+				option = argv[++i];
+				outType.push_back(option);				
+			}
 		}
 		else if(option == "-province"){
 			;
@@ -275,14 +278,26 @@ int main(int argc, char** argv) {
 		}
 	}
 	
+	
+	if(filePath.length() == 0){
+		cout<<"-log参数未指定"<<endl;
+		return -1;	
+	} 
+	
 	if(date.length() != 0){
 		string dateTemp = date;
-		date = filePath.append("\\");
+		date = filePath;
 		date.append(dateTemp);
 		date.append(".log.txt");
 	}
 	
-	/*
+	//读取日志文件夹 
+	vector<string> files;
+	string format = "";	//.txt
+	getAllFiles(filePath, files, format);
+	int size = files.size();
+	
+	/* 
 	//测试用：输出日期 
 	cout<<endl;
 	cout<<"date:"<<endl;
@@ -290,9 +305,20 @@ int main(int argc, char** argv) {
 	cout<<"___________________________________________"<<endl;
 	*/
 	
+	cout<<endl;
+	cout<<"date:"<<endl;
+	cout<<date<<endl;
+	cout<<"___________________________________________"<<endl;
+	cout<<endl;
+	cout<<"path:"<<endl;
+	cout<<filePath<<endl;
+	cout<<"___________________________________________"<<endl;
+	
 	for (int i = 0; i<size; i++){	
 		if(date.length() != 0){
+			cout << files[i] << " :" <<endl;
 			if(files[i] > date)
+			
 				continue;		
 		}
 		//cout << files[i] << " :" <<endl;
