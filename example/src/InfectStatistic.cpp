@@ -339,6 +339,8 @@ int main(int argc, char** argv) {
 			}
 			
 		}
+		else if(option == "list")
+			continue;
 		else{
 			cout<<endl<<endl<<option<<endl<<endl;
 			cout<<"Êä³ö²ÎÊý´íÎó"<<endl;
