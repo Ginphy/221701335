@@ -1,4 +1,4 @@
-/**
+/*
  * InfectStatistic
  * TODO
  *
@@ -16,11 +16,11 @@
 #include <windows.h>
 #include <map> 
 #include <vector> 
+
 using namespace std;
 
 //utf-8转为ansi函数 
-string UnicodeToANSI(const std::wstring& strUnicode)
-{
+string UnicodeToANSI(const std::wstring& strUnicode){
 	int nAnsiLen = WideCharToMultiByte(CP_ACP,
 		0,
 		strUnicode.c_str(),
@@ -29,7 +29,6 @@ string UnicodeToANSI(const std::wstring& strUnicode)
 		0,
 		NULL,
 		NULL);
- 
 	char *pAnsi = new char[nAnsiLen + 1];
 	memset((void*)pAnsi, 0, (nAnsiLen + 1) * sizeof(char));
  
@@ -48,8 +47,9 @@ string UnicodeToANSI(const std::wstring& strUnicode)
  
 	return strAnsi;
 }
-wstring UTF8ToUnicode(const std::string& str)
-{
+
+
+wstring UTF8ToUnicode(const std::string& str){
 	int nUnicodeLen = ::MultiByteToWideChar(CP_UTF8,
 		0,
 		str.c_str(),
@@ -74,33 +74,27 @@ wstring UTF8ToUnicode(const std::string& str)
  
 	return strUnicode;
 }
-string Utf8ToAnsi(const std::string &strUtf8)
-{
+string Utf8ToAnsi(const std::string &strUtf8){
 	std::wstring strUnicode = UTF8ToUnicode(strUtf8);
+	
 	return UnicodeToANSI(strUnicode);
 }
 
 
 //获取特定格式的文件名    
-void getAllFiles(string path, vector<string>& files,string format)
-{	
+void getAllFiles(string path, vector<string>& files,string format){	
 	intptr_t  hFile = 0;//文件句柄  64位下long 改为 intptr_t
 	struct _finddata_t fileinfo;//文件信息 
 	string p;
-	if ((hFile = _findfirst(p.assign(path).append("\\*" + format).c_str(), &fileinfo)) != -1) //文件存在
-	{
-		do
-		{
-			if ((fileinfo.attrib & _A_SUBDIR))//判断是否为文件夹
-			{
-				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)//文件夹名中不含"."和".."
-				{
+	if ((hFile = _findfirst(p.assign(path).append("\\*" + format).c_str(), &fileinfo)) != -1) {
+		do{
+			if ((fileinfo.attrib & _A_SUBDIR)){//判断是否为文件夹
+				if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0){//文件夹名中不含"."和".."
 					files.push_back(p.assign(path).append(fileinfo.name)); //保存文件夹名
 					getAllFiles(p.assign(path).append(fileinfo.name), files,format); //递归遍历文件夹
 				}
 			}
-			else
-			{
+			else{
 				files.push_back(p.assign(path).append(fileinfo.name));//如果不是文件夹，储存文件名
 				//files.push_back(p.assign(path).append("\\").append(fileinfo.name));
 			}
@@ -111,12 +105,13 @@ void getAllFiles(string path, vector<string>& files,string format)
 
 
 int main(int argc, char** argv) {
-
 	//设置输出格式记录结构 
 	int outTypeSet = 0;
 	vector<string> outType;
 	int outProvincesSet = 0;
-	string provincesList[] = {"全国","安徽","北京","重庆","福建","甘肃","广东","广西","贵州","海南","河北","河南","黑龙江","湖北","湖南","吉林","江苏","江西","辽宁","内蒙古","宁夏","青海","山东","山西","陕西","上海","四川","天津","西藏","新疆","云南","浙江"}; 
+	string provincesList[] = {"全国","安徽","北京","重庆","福建","甘肃","广东","广西","贵州","海南",
+	"河北","河南","黑龙江","湖北","湖南","吉林","江苏","江西","辽宁","内蒙古","宁夏","青海","山东",
+	"山西","陕西","上海","四川","天津","西藏","新疆","云南","浙江"}; 
 	map<string,int> provincesOut;
 	provincesOut["全国"] = 0;
 	provincesOut["安徽"] = 0;
@@ -150,7 +145,6 @@ int main(int argc, char** argv) {
 	provincesOut["新疆"] = 0;
 	provincesOut["云南"] = 0;
 	provincesOut["浙江"] = 0;
-
 	//设置各省人数统计map结构 
 	map<string,int> provincesUndef;
 	map<string,int> provincesDef;
@@ -287,20 +281,12 @@ int main(int argc, char** argv) {
 	string targetProvince; 
 	string inPath("");
 	string outPath("");
-	string file;
 	string date("");
-
-	/*
-	//测试用：输出main函数的参数个数及各个参数 
-	cout<<"argc:"<<argc<<endl;
-	for(int i=1;i<argc;i++){
-		cout<<"argv["<<i<<"]:"<<argv[i]<<endl;
-	}
-	*/
-	
+	string file;
+	string option,val;
 	char temp[256];
 	int numTemp;
-	string option,val;
+	
 	for(int i = 1; i < argc; i++){
 		option = argv[i];
 		if(option == "-log"){
@@ -342,22 +328,21 @@ int main(int argc, char** argv) {
 		else if(option == "list")
 			continue;
 		else{
-			cout<<endl<<endl<<option<<endl<<endl;
-			cout<<"输出参数错误"<<endl;
+			cout << endl << endl << option << endl << endl;
+			cout << "输出参数错误" << endl;
 			return -1;
 		}
 	}
 	
 	if(inPath.length() == 0){
-		cout<<"-log参数未指定"<<endl;
+		cout << "-log参数未指定" << endl;
 		return -1;	
 	} 
 	
 	if(outPath.length() == 0){
-		cout<<"-out参数未指定"<<endl;
+		cout << "-out参数未指定" << endl;
 		return -1;	
 	} 
-	
 	
 	if(date.length() != 0){
 		string dateTemp = date;
@@ -365,51 +350,26 @@ int main(int argc, char** argv) {
 		date.append(dateTemp);
 		date.append(".log.txt");
 	}
-	
 	//读取日志文件夹 
 	vector<string> files;
 	string format = "";	//.txt
 	getAllFiles(inPath, files, format);
 	int size = files.size();
-	
-	/* 
-	//测试用：输出日期 
-	cout<<endl;
-	cout<<"date:"<<endl;
-	cout<<date<<endl;
-	cout<<"___________________________________________"<<endl;
-	*/
-	
-	/* 
-	//测试用：输出文件路径 
-	cout<<"___________________________________________"<<endl;
-	cout<<endl;
-	cout<<"path:"<<endl;
-	cout<<inPath<<endl;
-	cout<<"___________________________________________"<<endl;
-	*/
-	
-	for (int i = 0; i<size; i++){	
+	for (int i = 0; i < size; i++){	
 		if(date.length() != 0){
-			//cout << files[i] << " :" <<endl;
 			if(files[i] > date)
 				continue;		
 		}
-		//cout << files[i] << " :" <<endl;
-		char *filePath = const_cast<char *>(files[i].c_str()) ;
-		//cout << filepath << " :" <<endl;
-		ifstream fin(filePath);
-		
+		const char *FILEPATH = const_cast<char *>(files[i].c_str()) ;
+		ifstream fin(FILEPATH);
 		//处理文档内容
 		while(!fin.eof()){		 
 			fin >> temp;
 			string info = Utf8ToAnsi(temp);
-			
 			if(info == "//"){
 				fin.getline(temp,255);
 				continue;
 			}
-			
 			targetProvince = info;
 			fin >> temp;
 			info = Utf8ToAnsi(temp);
@@ -492,14 +452,14 @@ int main(int argc, char** argv) {
 					provincesUndef.at(tempProvince) += numTemp;
 				}
 				else{
-					cout << targetProvince<<"相关文档数据错误"<<endl;
+					cout << targetProvince << "相关文档数据错误" << endl;
 					fin.getline(temp,255);
 					continue; 
 				} 	
 			}
 			
 			else{
-				cout << targetProvince<<"相关文档数据错误"<<endl;
+				cout << targetProvince << "相关文档数据错误" << endl;
 				fin.getline(temp,255);
 				continue; 
 			} 
@@ -508,165 +468,79 @@ int main(int argc, char** argv) {
 		fin.close();
 	}
 	//所有指定文档处理完毕
-	
-	
-	const char *filePath = const_cast<char *>(outPath.c_str()) ;
-	ofstream fout(filePath);
+	const char *FILEPATH = const_cast<char *>(outPath.c_str()) ;
+	ofstream fout(FILEPATH);
 	if(outProvincesSet == 0 && outTypeSet == 0){
-		for(int i=0; i<32; i++){
-			fout<<provincesList[i]<<"\t感染患者"<<provincesDef.at(provincesList[i])<<"\t疑似患者"<<provincesUndef.at(provincesList[i])<<"\t治愈"<<provincesCure.at(provincesList[i])<<"\t死亡"<<provincesDie.at(provincesList[i])<<endl;
+		for(int i = 0; i < 32; i++){
+			fout << provincesList[i] << "\t感染患者" << provincesDef.at(provincesList[i]) << "\t疑似患者";
+			fout << provincesUndef.at(provincesList[i]) << "\t治愈" << provincesCure.at(provincesList[i]) << "\t死亡";
+			fout << provincesDie.at(provincesList[i]) << endl;
 		}
 	}
 	else{
 		if(outProvincesSet != 0 && outTypeSet == 0){
-			for(int i=0; i<32; i++){
+			for(int i = 0; i < 32; i++){
 				if(provincesOut.at(provincesList[i]) == 1)
-					fout<<provincesList[i]<<"\t感染患者"<<provincesDef.at(provincesList[i])<<"\t疑似患者"<<provincesUndef.at(provincesList[i])<<"\t治愈"<<provincesCure.at(provincesList[i])<<"\t死亡"<<provincesDie.at(provincesList[i])<<endl;
+					fout << provincesList[i] << "\t感染患者" << provincesDef.at(provincesList[i]) << "\t疑似患者";
+					fout << provincesUndef.at(provincesList[i]) << "\t治愈" << provincesCure.at(provincesList[i]) << "\t死亡";
+					fout << provincesDie.at(provincesList[i]) << endl;
 			}
 		}
 		else if(outProvincesSet == 0 && outTypeSet != 0){
-			for(int i=0; i<32; i++){
-				fout<<provincesList[i];
+			for(int i = 0; i < 32; i++){
+				fout << provincesList[i];
 				for (vector<string>::iterator iter = outType.begin(); iter != outType.end(); iter++){
 					if(*iter == "ip"){
-						fout<<"\t感染患者"<<provincesDef.at(provincesList[i]);
+						fout << "\t感染患者" << provincesDef.at(provincesList[i]);
 					}
 					else if(*iter == "sp"){
-						fout<<"\t疑似患者"<<provincesUndef.at(provincesList[i]);
+						fout << "\t疑似患者" << provincesUndef.at(provincesList[i]);
 					}
 					else if(*iter == "cure"){
-						fout<<"\t治愈"<<provincesCure.at(provincesList[i]);
+						fout << "\t治愈" << provincesCure.at(provincesList[i]);
 					}
 					else if(*iter == "dead"){
-						fout<<"\t死亡"<<provincesDie.at(provincesList[i]);
+						fout << "\t死亡" << provincesDie.at(provincesList[i]);
 					}
 					else{
-						cout<<"-type参数错误"<<endl;
+						cout << "-type参数错误" << endl;
 						return -1; 
 					}
 				}
-				fout<<endl;
+				fout << endl;
 			}
 		}
 		else{
-			for(int i=0; i<32; i++){
+			for(int i = 0; i < 32; i++){
 				if(provincesOut.at(provincesList[i]) == 1){
-					fout<<provincesList[i];
+					fout << provincesList[i];
 					for (vector<string>::iterator iter = outType.begin(); iter != outType.end(); iter++){
 						if(*iter == "ip"){
-							fout<<"\t感染患者"<<provincesDef.at(provincesList[i]);
+							fout << "\t感染患者" << provincesDef.at(provincesList[i]);
 						}
 						else if(*iter == "sp"){
-							fout<<"\t疑似患者"<<provincesUndef.at(provincesList[i]);
+							fout << "\t疑似患者" << provincesUndef.at(provincesList[i]);
 						}
 						else if(*iter == "cure"){
-							fout<<"\t治愈"<<provincesCure.at(provincesList[i]);
+							fout << "\t治愈" << provincesCure.at(provincesList[i]);
 						}
 						else if(*iter == "dead"){
-							fout<<"\t死亡"<<provincesDie.at(provincesList[i]);
+							fout << "\t死亡" << provincesDie.at(provincesList[i]);
 						}
 						else{
-							cout<<"-type参数错误"<<endl;
+							cout << "-type参数错误" << endl;
 							return -1; 
 						}
 					}
-					fout<<endl;
+					fout << endl;
 				}
 			}
 			
 		}
 	}
-	fout<<"// 该文档并非真实数据，仅供测试使用"<<endl;
+	fout << "// 该文档并非真实数据，仅供测试使用" << endl;
 	fout.close();
-	cout<<"统计完毕"<<endl;
-
-	/*
-	//测试用：将信息按格式输出到控制台 
-	cout<<"__________________________________________________________________"<<endl;
-	cout<<"__________________________________________________________________"<<endl;
-	if(outProvincesSet == 0 && outTypeSet == 0){
-		for(int i=0; i<32; i++){
-			cout<<provincesList[i]<<"\t感染患者"<<provincesDef.at(provincesList[i])<<"\t疑似患者"<<provincesUndef.at(provincesList[i])<<"\t治愈"<<provincesCure.at(provincesList[i])<<"\t死亡"<<provincesDie.at(provincesList[i])<<endl;
-		}
-	}
-	else{
-		if(outProvincesSet != 0 && outTypeSet == 0){
-			for(int i=0; i<32; i++){
-				if(provincesOut.at(provincesList[i]) == 1)
-					cout<<provincesList[i]<<"\t感染患者"<<provincesDef.at(provincesList[i])<<"\t疑似患者"<<provincesUndef.at(provincesList[i])<<"\t治愈"<<provincesCure.at(provincesList[i])<<"\t死亡"<<provincesDie.at(provincesList[i])<<endl;
-			}
-		}
-		else if(outProvincesSet == 0 && outTypeSet != 0){
-			for(int i=0; i<32; i++){
-				cout<<provincesList[i];
-				for (vector<string>::iterator iter = outType.begin(); iter != outType.end(); iter++){
-					if(*iter == "ip"){
-						cout<<"\t感染患者"<<provincesDef.at(provincesList[i]);
-					}
-					else if(*iter == "sp"){
-						cout<<"\t疑似患者"<<provincesUndef.at(provincesList[i]);
-					}
-					else if(*iter == "cure"){
-						cout<<"\t治愈"<<provincesCure.at(provincesList[i]);
-					}
-					else if(*iter == "dead"){
-						cout<<"\t死亡"<<provincesDie.at(provincesList[i]);
-					}
-					else{
-						cout<<"-type参数错误"<<endl;
-						return -1; 
-					}
-				}
-				cout<<endl;
-			}
-		}
-		else{
-			for(int i=0; i<32; i++){
-				if(provincesOut.at(provincesList[i]) == 1){
-					cout<<provincesList[i];
-					for (vector<string>::iterator iter = outType.begin(); iter != outType.end(); iter++){
-						if(*iter == "ip"){
-							cout<<"\t感染患者"<<provincesDef.at(provincesList[i]);
-						}
-						else if(*iter == "sp"){
-							cout<<"\t疑似患者"<<provincesUndef.at(provincesList[i]);
-						}
-						else if(*iter == "cure"){
-							cout<<"\t治愈"<<provincesCure.at(provincesList[i]);
-						}
-						else if(*iter == "dead"){
-							cout<<"\t死亡"<<provincesDie.at(provincesList[i]);
-						}
-						else{
-							cout<<"-type参数错误"<<endl;
-							return -1; 
-						}
-					}
-					cout<<endl;
-				}
-			}
-			
-		}
-	}
-	cout<<"__________________________________________________________________"<<endl;
-	cout<<"__________________________________________________________________"<<endl;
-	*/
-	
-	/*
-	//测试用：数据按照map结构全输出 
-	cout << "Undef:" <<endl;
-	for (map<string, int>::iterator iter = provincesUndef.begin(); iter != provincesUndef.end(); iter++)
-    	cout << iter->first << " ==> " << iter->second << endl;
-    cout << "Def:" <<endl;
-    for (map<string, int>::iterator iter = provincesDef.begin(); iter != provincesDef.end(); iter++)
-		cout << iter->first << " ==> " << iter->second << endl;
-	cout << "Cure:" <<endl;
-    for (map<string, int>::iterator iter = provincesCure.begin(); iter != provincesCure.end(); iter++)
-		cout << iter->first << " ==> " << iter->second << endl;
-	cout << "Die:" <<endl;
-    for (map<string, int>::iterator iter = provincesDie.begin(); iter != provincesDie.end(); iter++)
-		cout << iter->first << " ==> " << iter->second << endl;
-	*/
+	cout << "统计完毕" << endl;
 	
 	return 0;
 }
