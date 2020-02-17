@@ -37,7 +37,7 @@
 2.除`-log`与`-out`两个必要参数外还可以选择使用`-date`参数后补充yyyy-mm-dd格式的日期表示只读如该日期及更早的日志文件进行统计，若缺省则表示程序会处理指定目录下所有的日志文件。<br/>
 3.还可以使用`-type`后指定*ip*、*cure*、*dead*、*sp*其中的一个或多个来表示需要的统计的感染患者、治愈、死亡、疑似患者四类人群类型，若缺省则表示四类人群均被统计，比如使用`-type ip cure`，则对于每个地区会依次输出感染患者、治愈人数的信息。<br/>
 4.还可以使用`-province`后补充一或者多个地区/全国来选择需要统计的地理位置，若缺省则表示统计全国各个地区的信息并以拼音顺序依次输出统计结果，比如使用`-province 福建 全国 湖北`，则会依次输出全国、福建、湖北的信息。<br/>
-命令示例：
+命令示例：<br/>
 `>InfectStatistic.exe list -log D:/log -out D:/result/ListOut3.txt -date 2020-01-22 -type sp -province 福建`
 
 
@@ -46,4 +46,4 @@
 
 
 ### 博客链接
-[Ginphy-cnblog](https://www.cnblogs.com/ginphy/")
+[Ginphy-cnblog](https://www.cnblogs.com/ginphy/p/12318693.html")
